@@ -33,6 +33,7 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
 
         const serviceCollection = client.db('doctorConsultation').collection('service')
+        const addedServiceCollection = client.db('doctorConsultation').collection('addService')
 
         app.get('/service', async (req, res) => {
             const cursor = serviceCollection.find();
@@ -49,10 +50,17 @@ async function run() {
         })
 
         //Add service
-        app.post('/service', async (req, res) => {
+        app.post('/addService', async (req, res) => {
             const newService = req.body;
             console.log(newService);
-            const result = await serviceCollection.insertOne(newService);
+            const result = await addedServiceCollection.insertOne(newService);
+            res.send(result)
+        })
+
+        //Get the added service
+        app.get('/addService', async (req, res) => {
+            const cursor = addedServiceCollection.find();
+            const result = await cursor.toArray();
             res.send(result)
         })
 
@@ -74,7 +82,7 @@ async function run() {
                 }
             }
 
-            const result = await serviceCollection.updateOne(filter, service, options)
+            const result = await addedServiceCollection.updateOne(filter, service, options)
             res.send(result)
         })
 
