@@ -40,11 +40,42 @@ async function run() {
             res.send(result)
         })
 
+        //Single service details
         app.get('/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await serviceCollection.findOne(query)
             res.json(result)
+        })
+
+        //Add service
+        app.post('/service', async (req, res) => {
+            const newService = req.body;
+            console.log(newService);
+            const result = await serviceCollection.insertOne(newService);
+            res.send(result)
+        })
+
+        //Update Service
+        app.put('/addService/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updateService = req.body;
+
+            const service = {
+                $set: {
+                    service_name: updateService.service_name,
+                    service_image: updateService.service_image,
+                    service_location: updateService.service_location,
+                    description: updateService.description,
+                    price: updateService.price,
+
+                }
+            }
+
+            const result = await serviceCollection.updateOne(filter, service, options)
+            res.send(result)
         })
 
 
