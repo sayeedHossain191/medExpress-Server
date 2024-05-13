@@ -57,10 +57,11 @@ async function run() {
             res.send(result)
         })
 
-        //Get the added service
-        app.get('/addService', async (req, res) => {
-            const cursor = addedServiceCollection.find();
-            const result = await cursor.toArray();
+        //Get the added service posted by specific user/provider
+        app.get('/addService/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { 'serviceProvider.email': email }
+            const result = await addedServiceCollection.find(query).toArray();
             res.send(result)
         })
 
