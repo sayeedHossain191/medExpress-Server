@@ -32,8 +32,9 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
 
-        const serviceCollection = client.db('doctorConsultation').collection('service')
-        const addedServiceCollection = client.db('doctorConsultation').collection('addService')
+        const serviceCollection = client.db('doctorConsultation').collection('service');
+        const addedServiceCollection = client.db('doctorConsultation').collection('addService');
+        const bookedServiceCollection = client.db('doctorConsultation').collection('bookedService');
 
         app.get('/service', async (req, res) => {
             const cursor = serviceCollection.find();
@@ -74,12 +75,11 @@ async function run() {
 
             const service = {
                 $set: {
-                    service_name: updateService.service_name,
-                    service_image: updateService.service_image,
-                    service_location: updateService.service_location,
+                    name: updateService.name,
+                    image: updateService.image,
+                    area: updateService.area,
                     description: updateService.description,
                     price: updateService.price,
-
                 }
             }
 
@@ -94,6 +94,16 @@ async function run() {
             const result = await addedServiceCollection.deleteOne(query);
             res.send(result);
         })
+
+        //Booked service collection
+
+        app.post('/bookedService', async (req, res) => {
+            const serviceData = req.body;
+            console.log(serviceData);
+            const result = await bookedServiceCollection.insertOne(serviceData);
+            res.send(result)
+        })
+
 
 
         // Send a ping to confirm a successful connection
