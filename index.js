@@ -104,6 +104,13 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/bookedService/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { user_email: email }
+            const result = await bookedServiceCollection.find(query).toArray();
+            res.send(result)
+        })
+
 
 
         // Send a ping to confirm a successful connection
