@@ -46,7 +46,7 @@ async function run() {
             res.send(result)
         })
 
-        //Pagination 
+        //Pagination starts
         app.get('/all-service', async (req, res) => {
             const page = parseInt(req.query.page) - 1
             const size = parseInt(req.query.size)
@@ -63,6 +63,9 @@ async function run() {
             const count = await serviceCollection.estimatedDocumentCount();
             res.send({ count })
         })
+        //Pagination Ends
+
+
 
         //Single service details
         app.get('/service/:id', async (req, res) => {
@@ -132,6 +135,25 @@ async function run() {
             const email = req.params.email
             const query = { user_email: email }
             const result = await bookedServiceCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        //Filter 
+        app.get('/service-filter/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { user_email: email }
+            const filter = req.query.filter
+
+            let querySearch = {}
+            if (filter) querySearch = { category: filter }
+
+            const result = await bookedServiceCollection.find(query)
+                .toArray()
+                .find(querySearch)
+
+
+
+
             res.send(result)
         })
 
