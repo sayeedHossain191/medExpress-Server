@@ -39,8 +39,16 @@ async function run() {
         const addedServiceCollection = client.db('doctorConsultation').collection('addService');
         const bookedServiceCollection = client.db('doctorConsultation').collection('bookedService');
 
+
         app.get('/service', async (req, res) => {
-            const page = parseInt(req.query.page)
+            const cursor = serviceCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
+        //Pagination 
+        app.get('/all-service', async (req, res) => {
+            const page = parseInt(req.query.page) - 1
             const size = parseInt(req.query.size)
 
             const cursor = serviceCollection.find();
@@ -50,9 +58,8 @@ async function run() {
                 .toArray();
             res.send(result)
         })
-
         //Service count
-        app.get('/serviceCount', async (req, res) => {
+        app.get('/service-count', async (req, res) => {
             const count = await serviceCollection.estimatedDocumentCount();
             res.send({ count })
         })
